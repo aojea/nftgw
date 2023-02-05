@@ -74,7 +74,7 @@ spec:
       serviceAccountName: nftgw
       containers:
       - name: nftgw
-        image: aojea/nftgw:v1.0.1
+        image: aojea/nftgw:v0.0.1
         env:
         - name: HOST_IP
           valueFrom:
