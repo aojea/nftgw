@@ -35,7 +35,7 @@ const (
 	// 5ms, 10ms, 20ms, 40ms, 80ms, 160ms, 320ms, 640ms, 1.3s, 2.6s, 5.1s, 10.2s, 20.4s, 41s, 82s
 	maxRetries = 15
 
-	controllerName = "kubernetes-services-controller"
+	controllerName = "services-controller"
 )
 
 // NewController returns a new *Controller.
@@ -175,7 +175,6 @@ func (c *Controller) handleErr(err error, key interface{}) {
 	if keyErr != nil {
 		klog.ErrorS(err, "Failed to split meta namespace cache key", "key", key)
 	}
-	MetricRequeueServiceCount.WithLabelValues(key.(string)).Inc()
 
 	if c.queue.NumRequeues(key) < maxRetries {
 		klog.V(2).InfoS("Error syncing service, retrying", "service", klog.KRef(ns, name), "err", err)
@@ -195,11 +194,9 @@ func (c *Controller) syncServices(key string) error {
 		return err
 	}
 	klog.Infof("Processing sync for service %s on namespace %s ", name, namespace)
-	MetricSyncServiceCount.WithLabelValues(key).Inc()
 
 	defer func() {
 		klog.V(4).Infof("Finished syncing service %s on namespace %s : %v", name, namespace, time.Since(startTime))
-		MetricSyncServiceLatency.WithLabelValues(key).Observe(time.Since(startTime).Seconds())
 	}()
 
 	// Get current Service from the cache
@@ -222,15 +219,17 @@ func (c *Controller) syncServices(key string) error {
 		// delete all the VIPs from the dataplane
 		for vipKey := range vipsTracked {
 			vip, proto := splitVirtualIPKey(vipKey)
-			err := c.loadBalancer.Remove(LB{
-				Frontend: VirtualIP{
-					vip:      vip,
-					protocol: proto,
-				},
-			})
-			if err != nil {
-				return err
-			}
+			/*
+				err := c.loadBalancer.Remove(LB{
+					Frontend: VirtualIP{
+						vip:      vip,
+						protocol: proto,
+					},
+				})
+				if err != nil {
+					return err
+				}
+			*/
 			c.serviceTracker.deleteServiceVIP(name, namespace, vip, proto)
 		}
 		// Delete the Service form the Service Tracker
@@ -265,16 +264,18 @@ func (c *Controller) syncServices(key string) error {
 			// get the endpoints associated to the vip
 			eps := getLbEndpoints(endpointSlices, svcPort, family)
 			klog.Infof("ClusterIP %s has endpoints: %v", ip, eps)
-			err := c.loadBalancer.Apply(LB{
-				Frontend: VirtualIP{
-					vip:      vip,
-					protocol: svcPort.Protocol,
-				},
-				Backend: eps,
-			})
-			if err != nil {
-				return err
-			}
+			/*
+				err := c.loadBalancer.Apply(LB{
+					Frontend: VirtualIP{
+						vip:      vip,
+						protocol: svcPort.Protocol,
+					},
+					Backend: eps,
+				})
+				if err != nil {
+					return err
+				}
+			*/
 			// update the tracker with the VIP
 			c.serviceTracker.updateService(name, namespace, vip, svcPort.Protocol)
 			// mark the vip as processed
@@ -288,16 +289,18 @@ func (c *Controller) syncServices(key string) error {
 				}
 				for _, nodeIP := range nodeIPs {
 					vip := net.JoinHostPort(nodeIP, strconv.Itoa(int(svcPort.NodePort)))
-					err := c.loadBalancer.Apply(LB{
-						Frontend: VirtualIP{
-							vip:      vip,
-							protocol: svcPort.Protocol,
-						},
-						Backend: eps,
-					})
-					if err != nil {
-						return err
-					}
+					/*
+						err := c.loadBalancer.Apply(LB{
+							Frontend: VirtualIP{
+								vip:      vip,
+								protocol: svcPort.Protocol,
+							},
+							Backend: eps,
+						})
+						if err != nil {
+							return err
+						}
+					*/
 					// update the tracker with the VIP
 					c.serviceTracker.updateService(name, namespace, vip, svcPort.Protocol)
 					// mark the vip as processed
@@ -327,16 +330,18 @@ func (c *Controller) syncServices(key string) error {
 			if len(externalIPs) > 0 {
 				for _, extIP := range externalIPs {
 					vip := net.JoinHostPort(extIP, strconv.Itoa(int(svcPort.Port)))
-					err := c.loadBalancer.Apply(LB{
-						Frontend: VirtualIP{
-							vip:      vip,
-							protocol: svcPort.Protocol,
-						},
-						Backend: eps,
-					})
-					if err != nil {
-						return err
-					}
+					/*
+						err := c.loadBalancer.Apply(LB{
+							Frontend: VirtualIP{
+								vip:      vip,
+								protocol: svcPort.Protocol,
+							},
+							Backend: eps,
+						})
+						if err != nil {
+							return err
+						}
+					*/
 					c.serviceTracker.updateService(name, namespace, vip, svcPort.Protocol)
 					// mark the vip as processed
 					vipsTracked.Delete(virtualIPKey(vip, svcPort.Protocol))
@@ -349,15 +354,17 @@ func (c *Controller) syncServices(key string) error {
 	// so the remaining ones that we had in the vipsTracked variable should be deleted
 	for vipKey := range vipsTracked {
 		vip, proto := splitVirtualIPKey(vipKey)
-		err := c.loadBalancer.Remove(LB{
-			Frontend: VirtualIP{
-				vip:      vip,
-				protocol: proto,
-			},
-		})
-		if err != nil {
-			return err
-		}
+		/*
+			err := c.loadBalancer.Remove(LB{
+				Frontend: VirtualIP{
+					vip:      vip,
+					protocol: proto,
+				},
+			})
+			if err != nil {
+				return err
+			}
+		*/
 		c.serviceTracker.deleteServiceVIP(name, namespace, vip, proto)
 	}
 	c.serviceTracker.deleteServiceVIPs(name, namespace, vipsTracked)

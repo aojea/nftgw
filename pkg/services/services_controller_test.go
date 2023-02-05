@@ -40,7 +40,6 @@ func newController() *serviceController {
 	controller := NewController(client,
 		informerFactory.Core().V1().Services(),
 		informerFactory.Discovery().V1().EndpointSlices(),
-		FakeLoadBalancer{},
 	)
 	controller.servicesSynced = alwaysReady
 	controller.endpointSlicesSynced = alwaysReady
