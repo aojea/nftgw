@@ -47,16 +47,16 @@ func Test_getBackends(t *testing.T) {
 						},
 						Ports: []discovery.EndpointPort{
 							{
-								Name:     utilpointer.StringPtr("tcp-example"),
+								Name:     utilpointer.String("tcp-example"),
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(80)),
+								Port:     utilpointer.Int32(int32(80)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv4,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"10.0.0.2"},
 							},
@@ -84,16 +84,16 @@ func Test_getBackends(t *testing.T) {
 						},
 						Ports: []discovery.EndpointPort{
 							{
-								Name:     utilpointer.StringPtr("tcp-example-wrong"),
+								Name:     utilpointer.String("tcp-example-wrong"),
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(8080)),
+								Port:     utilpointer.Int32(int32(8080)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv4,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"10.0.0.2"},
 							},
@@ -122,14 +122,14 @@ func Test_getBackends(t *testing.T) {
 						Ports: []discovery.EndpointPort{
 							{
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(8080)),
+								Port:     utilpointer.Int32(int32(8080)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv4,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"10.0.0.2"},
 							},
@@ -156,16 +156,16 @@ func Test_getBackends(t *testing.T) {
 						},
 						Ports: []discovery.EndpointPort{
 							{
-								Name:     utilpointer.StringPtr("tcp-example"),
+								Name:     utilpointer.String("tcp-example"),
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(80)),
+								Port:     utilpointer.Int32(int32(80)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv6,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"2001:db2::2"},
 							},
@@ -193,16 +193,16 @@ func Test_getBackends(t *testing.T) {
 						},
 						Ports: []discovery.EndpointPort{
 							{
-								Name:     utilpointer.StringPtr("tcp-example"),
+								Name:     utilpointer.String("tcp-example"),
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(80)),
+								Port:     utilpointer.Int32(int32(80)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv4,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"10.0.0.2", "10.1.1.2"},
 							},
@@ -216,16 +216,16 @@ func Test_getBackends(t *testing.T) {
 						},
 						Ports: []discovery.EndpointPort{
 							{
-								Name:     utilpointer.StringPtr("tcp-example"),
+								Name:     utilpointer.String("tcp-example"),
 								Protocol: protoPtr(v1.ProtocolTCP),
-								Port:     utilpointer.Int32Ptr(int32(80)),
+								Port:     utilpointer.Int32(int32(80)),
 							},
 						},
 						AddressType: discovery.AddressTypeIPv4,
 						Endpoints: []discovery.Endpoint{
 							{
 								Conditions: discovery.EndpointConditions{
-									Ready: utilpointer.BoolPtr(true),
+									Ready: utilpointer.Bool(true),
 								},
 								Addresses: []string{"10.0.0.2", "10.2.2.2"},
 							},
