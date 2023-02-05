@@ -100,13 +100,6 @@ jobs:
         # dump the kubeconfig for later
         /usr/local/bin/kind get kubeconfig --name ${{ env.KIND_CLUSTER_NAME}} > _artifacts/kubeconfig.conf
 
-    - name: Get Cluster status
-      run: |
-        # wait network is ready
-        /usr/local/bin/kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
-        /usr/local/bin/kubectl get nodes -o wide
-        /usr/local/bin/kubectl get pods -A
-
     - name: Workaround CoreDNS for IPv6 airgapped
       if: ${{ matrix.ipFamily == 'ipv6' }}
       run: |
@@ -150,6 +143,13 @@ jobs:
         /usr/local/bin/kubectl set image ds/nftgw nftgw=nftgw:test -n kube-system
         # wait until nftgw is ready
         /usr/local/bin/kubectl --namespace=kube-system rollout status daemonset nftgw -w --timeout=3m
+
+    - name: Get Cluster status
+      run: |
+        # wait network is ready
+        /usr/local/bin/kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
+        /usr/local/bin/kubectl get nodes -o wide
+        /usr/local/bin/kubectl get pods -A
 
     - name: Run tests
       run: |
