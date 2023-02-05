@@ -18,7 +18,7 @@ clean:
 	rm -rf "$(OUT_DIR)/"
 
 test:
-	hack/test-all.sh
+	go test ./... -v
 
 # code linters
 lint:
