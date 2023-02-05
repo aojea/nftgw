@@ -262,7 +262,7 @@ func (c *Controller) syncServices(key string) error {
 			vip := net.JoinHostPort(ip, strconv.Itoa(int(svcPort.Port)))
 			klog.V(4).Infof("Updating service %s/%s with VIP %s %s", name, namespace, vip, svcPort.Protocol)
 			// get the endpoints associated to the vip
-			eps := getLbEndpoints(endpointSlices, svcPort, family)
+			eps := getBackends(endpointSlices, svcPort, family)
 			klog.Infof("ClusterIP %s has endpoints: %v", ip, eps)
 			/*
 				err := c.loadBalancer.Apply(LB{

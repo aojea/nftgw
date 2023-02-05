@@ -38,15 +38,15 @@ func isIPService(service *v1.Service) bool {
 	return false
 }
 
-// return the endpoints that belong to the IPFamily as a slice of IP:Port
-func getLbEndpoints(slices []*discovery.EndpointSlice, svcPort v1.ServicePort, family v1.IPFamily) []string {
+// return the backends that belong to the IPFamily as a slice of IP:Port
+func getBackends(slices []*discovery.EndpointSlice, svcPort v1.ServicePort, family v1.IPFamily) []string {
 	// return an empty object so the caller don't have to check for nil and can use it as an iterator
 	if len(slices) == 0 {
 		return []string{}
 	}
 	// Endpoint Slices are allowed to have duplicate endpoints
 	// we use a set to deduplicate endpoints
-	lbEndpoints := sets.NewString()
+	lbEndpoints := sets.New[string]()
 	for _, slice := range slices {
 		klog.V(4).Infof("Getting endpoints for slice %s", slice.Name)
 		// Only return addresses that belong to the requested IP family
@@ -86,8 +86,8 @@ func getLbEndpoints(slices []*discovery.EndpointSlice, svcPort v1.ServicePort, f
 		}
 	}
 
-	klog.V(4).Infof("LB Endpoints for %s are: %v", slices[0].Labels[discovery.LabelServiceName], lbEndpoints.List())
-	return lbEndpoints.List()
+	klog.V(4).Infof("LB Endpoints for %s are: %v", slices[0].Labels[discovery.LabelServiceName], lbEndpoints.UnsortedList())
+	return lbEndpoints.UnsortedList()
 }
 
 func getNodeIPs() ([]string, error) {

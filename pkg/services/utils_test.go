@@ -11,7 +11,7 @@ import (
 	utilpointer "k8s.io/utils/pointer"
 )
 
-func Test_getLbEndpoints(t *testing.T) {
+func Test_getBackends(t *testing.T) {
 	type args struct {
 		slices  []*discovery.EndpointSlice
 		svcPort v1.ServicePort
@@ -244,8 +244,8 @@ func Test_getLbEndpoints(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getLbEndpoints(tt.args.slices, tt.args.svcPort, tt.args.family); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getLbEndpoints() = %v, want %v", got, tt.want)
+			if got := getBackends(tt.args.slices, tt.args.svcPort, tt.args.family); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getBackends() = %v, want %v", got, tt.want)
 			}
 		})
 	}
