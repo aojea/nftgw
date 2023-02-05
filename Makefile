@@ -18,7 +18,7 @@ clean:
 	rm -rf "$(OUT_DIR)/"
 
 test:
-	go test ./... -v
+	CGO_ENABLED=1 go test -v -race -count 1 ./...
 
 # code linters
 lint:
