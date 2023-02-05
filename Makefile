@@ -24,10 +24,6 @@ test:
 lint:
 	hack/lint.sh
 
-# run linters, ensure generated code, etc.
-verify:
-	hack/verify-all.sh
-
 # get image name from directory we're building
 IMAGE_NAME=nftgw
 # docker image registry, default to upstream
